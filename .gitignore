@@ -1,4 +1,11 @@
-# Cloudflare SSL Certificates & Keys
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
 certs/
 *.pem
 *.crt
@@ -8,3 +15,4 @@ certs/
 .DS_Store
 .vscode/
 .idea/
+
