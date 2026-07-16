@@ -139,7 +139,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
 
   return (
     <div className="w-full lg:w-[420px] shrink-0 flex flex-col justify-center">
-      <div className="bg-slate-900/75 backdrop-blur-xl border border-slate-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+      <div className="bg-slate-900/45 backdrop-blur-md border border-slate-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden">
         {/* Glow accent */}
         <div className="absolute -top-12 -left-12 w-32 h-32 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
