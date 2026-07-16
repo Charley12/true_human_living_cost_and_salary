@@ -1,6 +1,18 @@
+
 # wrangler files
 .wrangler
 .dev.vars*
 !.dev.vars.example
 .env*
 !.env.example
+
+certs/
+*.pem
+*.crt
+*.key
+
+# OS & Editor files
+.DS_Store
+.vscode/
+.idea/
+
