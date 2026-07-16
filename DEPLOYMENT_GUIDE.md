@@ -123,3 +123,34 @@ docker compose up -d --build
 2. Change the SSL/TLS encryption mode to **Full (strict)**.
 3. (Optional) Under **SSL/TLS** > **Edge Certificates**, enable **Always Use HTTPS** to automatically redirect HTTP requests to HTTPS on Cloudflare's edge servers.
 
+## 6. GitHub Actions CI/CD (Auto Deployment on Merge)
+
+To automatically deploy the application to your GCE instance whenever code is merged or pushed to the `main` branch, follow these steps:
+
+### A. Generate SSH Key Pair on GCE
+1. SSH into your GCE instance.
+2. Generate a new SSH key pair:
+   ```bash
+   ssh-keygen -t rsa -b 4096 -f ~/.ssh/github_actions_deploy -N ""
+   ```
+3. Add the public key to the authorized keys on GCE:
+   ```bash
+   cat ~/.ssh/github_actions_deploy.pub >> ~/.ssh/authorized_keys
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+4. Output the private key and copy it:
+   ```bash
+   cat ~/.ssh/github_actions_deploy
+   ```
+   *(Keep this private key content safe, you will paste it into GitHub Secrets)*
+
+### B. Configure GitHub Repository Secrets
+Go to your repository on GitHub, navigate to **Settings** > **Secrets and variables** > **Actions**, click **New repository secret** and add the following 3 secrets:
+1. **`GCE_SSH_IP`**: The external IP address of your GCE instance (`34.44.246.125`).
+2. **`GCE_SSH_USER`**: Your SSH username on GCE (`Charley`).
+3. **`GCE_SSH_PRIVATE_KEY`**: The content of the private key (`github_actions_deploy`) you copied in Step A (including the begin/end lines).
+
+### C. Trigger Automated Deployment
+Whenever you push to the `main` branch or merge a Pull Request into `main`, the GitHub Actions workflow will automatically run, connect to GCE, pull the changes, and rebuild/restart your Docker Compose services.
+
+
