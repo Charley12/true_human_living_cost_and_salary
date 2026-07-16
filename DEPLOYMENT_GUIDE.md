@@ -81,3 +81,45 @@ gcloud compute firewall-rules create allow-https \
 Then, ensure your Compute Engine instance is tagged with `http-server` and `https-server` in the GCP Console under instance details (Network Tags).
 
 Your deployment is now accessible from the external IP of the Compute Engine instance.
+
+## 5. Cloudflare Full / Full (Strict) SSL Setup
+
+To encrypt traffic between Cloudflare and your GCE instance using **Full / Full (Strict)** SSL, follow these steps:
+
+### A. Generate Cloudflare Origin CA Certificate
+1. Log in to your Cloudflare Dashboard and select your domain.
+2. Navigate to **SSL/TLS** > **Origin Server**.
+3. Click **Create Certificate**.
+4. Keep the default settings:
+   - **Generate private key and CSR with Cloudflare** (Private key type: RSA 2048).
+   - **Hostnames**: Ensure your domain (e.g., `yourdomain.com`) and wildcard (e.g., `*.yourdomain.com`) are listed.
+   - **Certificate Validity**: Select your preferred duration (e.g., 15 years is recommended).
+5. Click **Create**.
+6. Cloudflare will display the **Origin Certificate** and the **Private Key**:
+   - Copy the **Origin Certificate** text and save it on your GCE instance under the project directory as `certs/origin.crt`.
+   - Copy the **Private Key** text and save it on your GCE instance under the project directory as `certs/origin.key`.
+   
+> [!WARNING]
+> Keep the private key secure and never commit the `certs/` folder or private keys to version control. The root `.gitignore` has been pre-configured to ignore these files.
+
+### B. Place the Certificates on GCE
+Before running your Docker container, ensure the directory structure exists on GCE:
+```bash
+# In the root of your truehuman repository on the GCE instance
+mkdir -p certs
+nano certs/origin.crt # Paste the Origin Certificate here and save
+nano certs/origin.key # Paste the Private Key here and save
+chmod 600 certs/origin.key # Restrict permissions on the private key
+```
+
+### C. Spin up the Containers
+Run Docker Compose. It will automatically mount the certificates and Nginx will load them:
+```bash
+docker compose up -d --build
+```
+
+### D. Configure Cloudflare SSL/TLS Mode
+1. In the Cloudflare Dashboard, go to **SSL/TLS** > **Overview**.
+2. Change the SSL/TLS encryption mode to **Full (strict)**.
+3. (Optional) Under **SSL/TLS** > **Edge Certificates**, enable **Always Use HTTPS** to automatically redirect HTTP requests to HTTPS on Cloudflare's edge servers.
+

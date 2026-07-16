@@ -1,0 +1,10 @@
+# Cloudflare SSL Certificates & Keys
+certs/
+*.pem
+*.crt
+*.key
+
+# OS & Editor files
+.DS_Store
+.vscode/
+.idea/
