@@ -40,74 +40,8 @@ interface FloatingCard {
   isHovered: boolean;
 }
 
-const DEFAULT_MOCK_HUMANS = [
-  {
-    id: "mock-1",
-    name: "Takahiro",
-    country: "東京, 日本",
-    income: 2600,
-    rent: 950,
-    mortgage: 0,
-    living: 800,
-    cry: "年終降了，物價卻每天都在漲。在便利商店買晚餐都要看價格，我真的有在『活著』嗎？",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"
-  },
-  {
-    id: "mock-2",
-    name: "Chloe",
-    country: "巴黎, 法國",
-    income: 2100,
-    rent: 1100,
-    mortgage: 0,
-    living: 600,
-    cry: "奧運後房租漲了25%。我跟另外三個人合租一個小公寓。資本把我們逼進角落，然後叫這做『自由市場』。",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
-  },
-  {
-    id: "mock-3",
-    name: "Marcus",
-    country: "溫哥華, 加拿大",
-    income: 4200,
-    rent: 2500,
-    mortgage: 0,
-    living: 1200,
-    cry: "我每週工作 55 小時。收入的一半以上要給那個甚至沒見過面的房東。我的青春只是在幫他付他的豪宅房貸。",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120"
-  },
-  {
-    id: "mock-4",
-    name: "小陳",
-    country: "深圳, 中國",
-    income: 1800,
-    rent: 700,
-    mortgage: 0,
-    living: 600,
-    cry: "35歲危機，大廠裁員，房貸壓得我整晚失眠。我們像燃料一樣被燃燒，燒完了就被體制無情倒掉。",
-    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
-  },
-  {
-    id: "mock-5",
-    name: "Sarah",
-    country: "倫敦, 英國",
-    income: 3100,
-    rent: 1650,
-    mortgage: 0,
-    living: 900,
-    cry: "我是一名護士。我每天都在挽救生命，但我自己的生活卻在慢慢窒息。倫敦的房租已經瘋了。",
-    photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120"
-  },
-  {
-    id: "mock-6",
-    name: "Diego",
-    country: "聖保羅, 巴西",
-    income: 1200,
-    rent: 550,
-    mortgage: 0,
-    living: 500,
-    cry: "本地工作被跨國外包砍價，我們只能在極低的薪水裡內捲。連最基本的醫療我都負擔不起了。",
-    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=120"
-  }
-];
+const DEFAULT_MOCK_HUMANS: any[] = [];
+
 
 export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
   // Tabs State
