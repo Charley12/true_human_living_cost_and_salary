@@ -143,10 +143,10 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
     <div className="w-full lg:w-[420px] shrink-0 flex flex-col justify-center pointer-events-auto">
       <div className="bg-slate-900/45 backdrop-blur-md border border-slate-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden">
         {/* Glow accent */}
-        <div className="absolute -top-12 -left-12 w-32 h-32 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -top-12 -left-12 w-32 h-32 bg-slate-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="mb-5">
-          <span className="text-rose-500 text-[11px] font-bold tracking-widest uppercase border border-rose-950 bg-rose-950/30 px-3 py-0.5 rounded-full">
+          <span className="text-slate-300 text-[11px] font-bold tracking-widest uppercase border border-slate-800 bg-slate-900/50 px-3 py-0.5 rounded-full">
             {t("left.badge")}
           </span>
           <h2 className="text-2xl font-black mt-2 text-slate-100">{t("left.title")}</h2>
@@ -164,7 +164,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                 placeholder={t("left.name_placeholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-rose-500 transition"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-slate-500 transition"
               />
             </div>
             <div>
@@ -175,7 +175,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                 placeholder={t("left.city_placeholder")}
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-rose-500 transition"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-slate-500 transition"
               />
             </div>
           </div>
@@ -196,7 +196,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                 onClick={() => fileInputRef.current?.click()}
                 className="flex-1 cursor-pointer bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition rounded-lg px-4 py-2.5 text-center text-xs font-semibold text-slate-300 flex items-center justify-center gap-2"
               >
-                <i className="fa-solid fa-cloud-arrow-up text-rose-500"></i>{t("left.photo_button")}
+                <i className="fa-solid fa-cloud-arrow-up text-slate-400"></i>{t("left.photo_button")}
               </button>
               <input
                 type="file"
@@ -210,7 +210,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
 
           {/* Bills Section */}
           <div className="space-y-3 p-3 bg-slate-950/60 rounded-xl border border-slate-900">
-            <span className="text-[10px] text-rose-400 font-bold tracking-wider uppercase">{t("left.bill_title")}</span>
+            <span className="text-[10px] text-slate-400 font-bold tracking-wider uppercase">{t("left.bill_title")}</span>
 
             <div>
               <label className="block text-[11px] text-slate-400 mb-1">{t("left.income_label")}</label>
@@ -223,7 +223,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                   min="1"
                   value={income}
                   onChange={(e) => setIncome(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-7 pr-3 py-1.5 text-slate-100 focus:outline-none focus:border-rose-500 transition"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-7 pr-3 py-1.5 text-slate-100 focus:outline-none focus:border-slate-500 transition"
                 />
               </div>
             </div>
@@ -240,7 +240,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                     min="0"
                     value={rent}
                     onChange={(e) => setRent(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-rose-500 transition"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-slate-500 transition"
                   />
                 </div>
               </div>
@@ -255,7 +255,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                     min="0"
                     value={mortgage}
                     onChange={(e) => setMortgage(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-rose-500 transition"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-slate-500 transition"
                   />
                 </div>
               </div>
@@ -270,7 +270,7 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
                     min="0"
                     value={living}
                     onChange={(e) => setLiving(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-rose-500 transition"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-5 pr-2 py-1.5 text-slate-100 text-xs focus:outline-none focus:border-slate-500 transition"
                   />
                 </div>
               </div>
@@ -286,13 +286,13 @@ export function LeftPanel({ onNewSubmission }: LeftPanelProps) {
               placeholder={t("left.cry_placeholder")}
               value={cry}
               onChange={(e) => setCry(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-rose-500 transition text-xs resize-none"
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-slate-500 transition text-xs resize-none"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-extrabold rounded-lg tracking-wider transition duration-300 shadow-lg shadow-rose-950/50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 bg-slate-100 hover:bg-white text-slate-950 font-extrabold rounded-lg tracking-wider transition duration-300 shadow-lg shadow-slate-950/50 flex items-center justify-center gap-2 cursor-pointer"
           >
             <i className="fa-solid fa-paper-plane"></i> {t("left.submit")}
           </button>

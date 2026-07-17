@@ -127,11 +127,11 @@ function App() {
       {/* Header */}
       <header className="w-full px-6 py-4 flex justify-between items-center z-30 relative bg-slate-950/20 backdrop-blur-sm border-b border-slate-900/30">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-rose-600 flex items-center justify-center shadow-lg shadow-rose-900/50">
-            <i className="fa-solid fa-fingerprint text-xl text-white animate-pulse-slow"></i>
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shadow-lg shadow-slate-900/50 overflow-hidden">
+            <img src="/logo.png" alt="TrueHuman Logo" className="w-full h-full object-cover invert" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-wider text-rose-500">{t('header.title')}</h1>
+            <h1 className="text-xl font-extrabold tracking-wider text-slate-100">{t('header.title')}</h1>
             <p className="text-[10px] text-slate-400 uppercase tracking-widest">{t('header.subtitle')}</p>
           </div>
         </div>
@@ -139,7 +139,7 @@ function App() {
         <div className="flex items-center gap-4 text-xs text-slate-400">
           {/* Language Selector Dropdown */}
           <div className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-1.5 pointer-events-auto">
-            <i className="fa-solid fa-globe text-rose-500"></i>
+            <i className="fa-solid fa-globe text-slate-400"></i>
             <select
               value={locale}
               onChange={(e) => setLocale(e.target.value as Language)}
@@ -158,7 +158,7 @@ function App() {
           </div>
 
           <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-slate-400 animate-ping"></span>
             <span>{onlineCounter.toLocaleString()}</span> {t('header.online')}
           </span>
         </div>
@@ -176,9 +176,9 @@ function App() {
           {t('footer.copyright')}
         </div>
         <div className="flex gap-6 mt-2 md:mt-0">
-          <a href="#" className="hover:text-rose-400 transition">{t('footer.protocol')}</a>
-          <a href="#" className="hover:text-rose-400 transition">{t('footer.repo')}</a>
-          <a href="#" className="hover:text-rose-400 transition">{t('footer.algorithm')}</a>
+          <a href="#" className="hover:text-slate-300 transition">{t('footer.protocol')}</a>
+          <a href="#" className="hover:text-slate-300 transition">{t('footer.repo')}</a>
+          <a href="#" className="hover:text-slate-300 transition">{t('footer.algorithm')}</a>
         </div>
       </footer>
     </div>

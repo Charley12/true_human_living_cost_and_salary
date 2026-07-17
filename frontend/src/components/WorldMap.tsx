@@ -190,7 +190,7 @@ export function WorldMap({ heatmapStats }: Props) {
           {/* Glow filter for land */}
           <filter id="land-glow">
             <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur" />
-            <feFlood floodColor="rgba(56,189,248,0.08)" result="color" />
+            <feFlood floodColor="rgba(255,255,255,0.03)" result="color" />
             <feComposite in="color" in2="blur" operator="in" result="shadow" />
             <feMerge>
               <feMergeNode in="shadow" />
@@ -201,13 +201,13 @@ export function WorldMap({ heatmapStats }: Props) {
           {/* Subtle vignette */}
           <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
             <stop offset="60%" stopColor="transparent" />
-            <stop offset="100%" stopColor="rgba(3,7,18,0.65)" />
+            <stop offset="100%" stopColor="rgba(2,6,23,0.75)" />
           </radialGradient>
 
           {/* Ocean gradient */}
           <radialGradient id="ocean-bg" cx="50%" cy="40%" r="75%">
-            <stop offset="0%" stopColor="#0b1a2f" />
-            <stop offset="100%" stopColor="#030712" />
+            <stop offset="0%" stopColor="#1e293b" />
+            <stop offset="100%" stopColor="#020617" />
           </radialGradient>
         </defs>
 
@@ -225,7 +225,7 @@ export function WorldMap({ heatmapStats }: Props) {
               key={lat}
               x1={0} y1={y}
               x2={size.width} y2={y}
-              stroke={isEquator ? 'rgba(56,189,248,0.20)' : 'rgba(71,85,105,0.12)'}
+              stroke={isEquator ? 'rgba(255,255,255,0.15)' : 'rgba(71,85,105,0.12)'}
               strokeWidth={isEquator ? 0.9 : 0.5}
               strokeDasharray={isEquator ? undefined : '5 8'}
             />
@@ -261,9 +261,9 @@ export function WorldMap({ heatmapStats }: Props) {
           const isCritical = count >= 15000;
           const isMedium = count >= 2000 && count < 15000;
 
-          const coreColor  = isCritical ? '#e11d48' : isMedium ? '#9f1239' : '#4c0519';
-          const strokeColor = isCritical ? '#fb7185' : isMedium ? '#be123c' : '#9f1239';
-          const glowColor  = isCritical ? 'rgba(225,29,72,0.40)' : isMedium ? 'rgba(159,18,57,0.28)' : 'rgba(76,5,25,0.15)';
+          const coreColor  = isCritical ? '#ffffff' : isMedium ? '#94a3b8' : '#334155';
+          const strokeColor = isCritical ? '#cbd5e1' : isMedium ? '#64748b' : '#475569';
+          const glowColor  = isCritical ? 'rgba(255,255,255,0.30)' : isMedium ? 'rgba(148,163,184,0.20)' : 'rgba(71,85,105,0.10)';
           const glowR = radius * 3.5;
 
           return (
@@ -273,7 +273,7 @@ export function WorldMap({ heatmapStats }: Props) {
 
               {/* Animated pulse for critical */}
               {isCritical && (
-                <circle r={radius + 3} fill="none" stroke="rgba(225,29,72,0.55)" strokeWidth="1.2">
+                <circle r={radius + 3} fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="1.2">
                   <animate attributeName="r" values={`${radius + 3};${radius + 15};${radius + 3}`} dur="2.5s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite" />
                 </circle>
@@ -281,7 +281,7 @@ export function WorldMap({ heatmapStats }: Props) {
 
               {/* Medium pulse */}
               {isMedium && (
-                <circle r={radius + 2} fill="none" stroke="rgba(159,18,57,0.45)" strokeWidth="0.8">
+                <circle r={radius + 2} fill="none" stroke="rgba(148,163,184,0.30)" strokeWidth="0.8">
                   <animate attributeName="r" values={`${radius + 2};${radius + 10};${radius + 2}`} dur="3.5s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.6;0;0.6" dur="3.5s" repeatCount="indefinite" />
                 </circle>
@@ -298,7 +298,7 @@ export function WorldMap({ heatmapStats }: Props) {
                 y={radius + 13}
                 textAnchor="middle"
                 fontSize="8.5"
-                fill={isCritical ? '#fda4af' : isMedium ? 'rgba(251,113,133,0.75)' : 'rgba(100,116,139,0.65)'}
+                fill={isCritical ? '#ffffff' : isMedium ? 'rgba(226,232,240,0.75)' : 'rgba(148,163,184,0.65)'}
                 fontFamily="'Courier New', monospace"
                 fontWeight="600"
                 letterSpacing="0.5"
