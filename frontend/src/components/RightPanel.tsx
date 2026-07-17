@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Lock, MapPin, Eye, Trophy, MessageSquare } from "lucide-react";
 import { clsx } from "clsx";
+import { useTranslation } from "../i18n/I18nContext";
 
 interface RightPanelProps {
   unlocked: boolean;
@@ -44,6 +45,7 @@ const DEFAULT_MOCK_HUMANS: any[] = [];
 
 
 export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
+  const { t } = useTranslation();
   // Tabs State
   const [activeTab, setActiveTab] = useState<"leaderboard" | "messageBoard">("leaderboard");
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -286,22 +288,22 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                     <span className="truncate">{card.country}</span>
                   </p>
                 </div>
-                <span
+                 <span
                   className={clsx(
                     "text-[9px] font-bold border px-2 py-0.5 rounded-full shrink-0",
                     isHighStress ? "text-rose-500 border-rose-950 bg-rose-950/20 animate-pulse" : isMediumStress ? "text-amber-400 border-amber-950 bg-amber-950/20" : "text-emerald-400 border-emerald-950 bg-emerald-950/20"
                   )}
                 >
-                  壓力指數: {stress}%
+                  {t("right.stress_index")}: {stress}%
                 </span>
               </div>
               <div className="text-[11px] text-slate-300 leading-relaxed italic border-l-2 border-rose-500/50 pl-2 bg-slate-950/30 py-1.5 pr-1 rounded-r">
                 "{card.cry}"
               </div>
               <div className="flex justify-between items-center text-[9px] text-slate-500 border-t border-slate-800/60 pt-2">
-                <span>月入: ${card.income} USD</span>
+                <span>{t("right.monthly_income")}: ${card.income} USD</span>
                 <span>
-                  住居比:{" "}
+                  {t("right.housing_ratio")}:{" "}
                   {Math.round(((card.rent + card.mortgage) / (card.income || 1)) * 100)}%
                 </span>
               </div>
@@ -314,27 +316,27 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
       <div className="absolute bottom-6 left-6 z-20 bg-slate-950/85 border border-slate-800/80 p-3 rounded-xl backdrop-blur-md flex flex-col gap-2 text-[10px] shadow-xl pointer-events-auto transition hover:border-rose-900/45 max-w-[200px]">
         <div className="flex items-center gap-1.5 border-b border-slate-900 pb-1.5">
           <i className="fa-solid fa-fire-flame-curved text-rose-500 animate-pulse"></i>
-          <span className="text-slate-400 font-bold uppercase tracking-wider">全球吶喊熱力指數</span>
+          <span className="text-slate-400 font-bold uppercase tracking-wider">{t("right.legend_title")}</span>
         </div>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-slate-500">
               <span className="w-2 h-2 rounded-full bg-rose-950/40 border border-rose-900/60"></span>
-              平靜 (&lt; 2k)
+              {t("right.legend_low")}
             </span>
             <span className="font-mono text-slate-600">Low</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-slate-400">
               <span className="w-2 h-2 rounded-full bg-rose-800/60 shadow-sm shadow-rose-800/30"></span>
-              發熱 (2k - 15k)
+              {t("right.legend_med")}
             </span>
             <span className="font-mono text-rose-800/80">Med</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-rose-400 font-medium">
               <span className="w-2 h-2 rounded-full bg-rose-500 shadow-md shadow-rose-500"></span>
-              超載 (15k+)
+              {t("right.legend_critical")}
             </span>
             <span className="font-mono text-rose-500 animate-pulse">Critical</span>
           </div>
@@ -348,7 +350,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
             onClick={() => setWidgetOpen(true)}
             className="flex items-center gap-2 px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg shadow-lg text-xs font-bold transition cursor-pointer"
           >
-            <Eye size={14} /> 顯示數據終端
+            <Eye size={14} /> {t("right.show_terminal")}
           </button>
         )}
 
@@ -357,13 +359,13 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
             {/* Widget Header */}
             <div className="flex justify-between items-center border-b border-slate-900 pb-2 mb-3">
               <span className="text-rose-500 text-xs font-black tracking-widest uppercase flex items-center gap-1.5">
-                <Trophy size={14} className="text-rose-500 animate-pulse" />數據終端
+                <Trophy size={14} className="text-rose-500 animate-pulse" />{t("right.terminal")}
               </span>
               <button
                 onClick={() => setWidgetOpen(false)}
                 className="text-slate-500 hover:text-slate-300 text-xs transition cursor-pointer"
               >
-                隱藏
+                {t("right.hide")}
               </button>
             </div>
 
@@ -376,7 +378,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                   activeTab === "leaderboard" ? "bg-rose-950/40 text-rose-400 border border-rose-900/50" : "text-slate-400 hover:text-slate-200"
                 )}
               >
-                <Trophy size={12} /> 排行榜
+                <Trophy size={12} /> {t("right.leaderboard")}
               </button>
               <button
                 onClick={() => setActiveTab("messageBoard")}
@@ -385,7 +387,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                   activeTab === "messageBoard" ? "bg-rose-950/40 text-rose-400 border border-rose-900/50" : "text-slate-400 hover:text-slate-200"
                 )}
               >
-                <MessageSquare size={12} /> 全球吶喊 {!unlocked && <Lock size={12} className="text-rose-500" />}
+                <MessageSquare size={12} /> {t("right.message_board")} {!unlocked && <Lock size={12} className="text-rose-500" />}
               </button>
             </div>
 
@@ -394,7 +396,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
               {activeTab === "leaderboard" && (
                 <div className="flex flex-col gap-2">
                   {leaderboard.length === 0 ? (
-                    <p className="text-slate-500 text-xs italic text-center py-4">No protest data yet.</p>
+                    <p className="text-slate-500 text-xs italic text-center py-4">{t("right.no_protest")}</p>
                   ) : (
                     leaderboard.slice(0, 10).map((entry, idx) => (
                       <div key={entry.countryCode} className="flex justify-between items-center bg-slate-900/60 border border-slate-800/50 p-2.5 rounded-lg">
@@ -402,7 +404,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                           #{idx + 1} <span className="font-mono text-white text-sm ml-1.5">{entry.countryCode}</span>
                         </span>
                         <span className="text-[10px] font-bold bg-rose-950/50 border border-rose-900/70 text-rose-400 px-2 py-0.5 rounded-full">
-                          {entry.submissionCount} 吶喊
+                          {entry.submissionCount} {t("leaderboard.shouts")}
                         </span>
                       </div>
                     ))
@@ -416,9 +418,9 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                   {!unlocked && (
                     <div className="absolute inset-0 bg-slate-950/95 z-20 flex flex-col items-center justify-center text-slate-400 p-4 text-center rounded-xl">
                       <Lock size={32} className="mb-2 text-rose-500 animate-pulse" />
-                      <h4 className="text-xs font-bold text-slate-100">保護區已鎖定</h4>
+                      <h4 className="text-xs font-bold text-slate-100">{t("right.locked_title")}</h4>
                       <p className="text-[10px] text-slate-500 mt-1 max-w-[220px] leading-relaxed">
-                        你必須先在左側發射一份生存報告，以此建立與全球的去中心化共識連線。
+                        {t("right.locked_desc")}
                       </p>
                     </div>
                   )}
@@ -430,7 +432,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder="代號"
+                          placeholder={t("right.decl_name_placeholder")}
                           required
                           value={declForm.name}
                           onChange={(e) => setDeclForm({ ...declForm, name: e.target.value })}
@@ -438,7 +440,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         />
                         <input
                           type="text"
-                          placeholder="國家 / 城市"
+                          placeholder={t("right.decl_city_placeholder")}
                           required
                           value={declForm.country}
                           onChange={(e) => setDeclForm({ ...declForm, country: e.target.value })}
@@ -446,7 +448,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         />
                       </div>
                       <textarea
-                        placeholder="在此對世界宣告你的困境與反抗..."
+                        placeholder={t("right.decl_msg_placeholder")}
                         required
                         value={declForm.message}
                         onChange={(e) => setDeclForm({ ...declForm, message: e.target.value })}
@@ -456,14 +458,14 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         type="submit"
                         className="bg-rose-700 hover:bg-rose-600 text-white font-bold py-1 rounded cursor-pointer transition text-[11px]"
                       >
-                        發表宣言
+                        {t("right.decl_submit")}
                       </button>
                     </form>
 
                     {/* Messages scroll area */}
                     <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
                       {messages.length === 0 ? (
-                        <p className="text-slate-500 text-xs italic text-center py-4">No messages yet.</p>
+                        <p className="text-slate-500 text-xs italic text-center py-4">{t("right.no_messages")}</p>
                       ) : (
                         messages.map((msg) => (
                           <div key={msg.id} className="bg-slate-900/60 border-l-2 border-rose-500 border border-slate-800/40 p-2.5 rounded-r-lg text-xs">

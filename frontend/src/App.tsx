@@ -3,6 +3,8 @@ import axios from 'axios';
 import { LeftPanel } from './components/LeftPanel';
 import { RightPanel } from './components/RightPanel';
 import { WorldMap } from './components/WorldMap';
+import { useTranslation } from './i18n/I18nContext';
+import type { Language } from './i18n/I18nContext';
 
 // Map 2-letter ISO country codes to map region keys
 const REGION_MAPPING: Record<string, string> = {
@@ -31,6 +33,7 @@ const REGION_MAPPING: Record<string, string> = {
 };
 
 function App() {
+  const { t, locale, setLocale } = useTranslation();
   const [unlocked, setUnlocked] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<any>(null);
   const [onlineCounter, setOnlineCounter] = useState(31482);
@@ -122,20 +125,41 @@ function App() {
       <div className="absolute inset-0 z-[1] pointer-events-none select-none bg-gradient-to-b from-[#030712]/60 via-transparent to-[#030712]/70" />
 
       {/* Header */}
-      <header className="w-full px-6 py-4 flex justify-between items-center z-30 relative">
+      <header className="w-full px-6 py-4 flex justify-between items-center z-30 relative bg-slate-950/20 backdrop-blur-sm border-b border-slate-900/30">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-rose-600 flex items-center justify-center shadow-lg shadow-rose-900/50">
             <i className="fa-solid fa-fingerprint text-xl text-white animate-pulse-slow"></i>
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-wider text-rose-500">TrueHuman</h1>
-            <p className="text-[10px] text-slate-400 uppercase tracking-widest">Global Resistance Ledger</p>
+            <h1 className="text-xl font-extrabold tracking-wider text-rose-500">{t('header.title')}</h1>
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest">{t('header.subtitle')}</p>
           </div>
         </div>
-        <div className="flex gap-4 text-xs text-slate-400">
+        
+        <div className="flex items-center gap-4 text-xs text-slate-400">
+          {/* Language Selector Dropdown */}
+          <div className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-1.5 pointer-events-auto">
+            <i className="fa-solid fa-globe text-rose-500"></i>
+            <select
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as Language)}
+              className="bg-transparent text-slate-200 outline-none cursor-pointer text-xs font-semibold"
+            >
+              <option value="en-US" className="bg-slate-950 text-slate-200">🇺🇸 English (US)</option>
+              <option value="en-GB" className="bg-slate-950 text-slate-200">🇬🇧 English (UK)</option>
+              <option value="de" className="bg-slate-950 text-slate-200">🇩🇪 Deutsch</option>
+              <option value="fr" className="bg-slate-950 text-slate-200">🇫🇷 Français</option>
+              <option value="es" className="bg-slate-950 text-slate-200">🇪🇸 Español</option>
+              <option value="it" className="bg-slate-950 text-slate-200">🇮🇹 Italiano</option>
+              <option value="pl" className="bg-slate-950 text-slate-200">🇵🇱 Polski</option>
+              <option value="ru" className="bg-slate-950 text-slate-200">🇷🇺 Русский</option>
+              <option value="uk" className="bg-slate-950 text-slate-200">🇺🇦 Українська</option>
+            </select>
+          </div>
+
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>{onlineCounter.toLocaleString()}</span> Humans Online
+            <span>{onlineCounter.toLocaleString()}</span> {t('header.online')}
           </span>
         </div>
       </header>
@@ -149,12 +173,12 @@ function App() {
       {/* Footer */}
       <footer className="w-full px-6 py-3 border-t border-slate-900/55 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500 z-30 relative bg-slate-950/80 backdrop-blur-md">
         <div>
-          © 2026 <span className="text-rose-500/80 font-bold">TrueHuman Project.</span> All Cries Are Anonymous.
+          {t('footer.copyright')}
         </div>
         <div className="flex gap-6 mt-2 md:mt-0">
-          <a href="#" className="hover:text-rose-400 transition">去中心化通訊協定</a>
-          <a href="#" className="hover:text-rose-400 transition">API 開源儲存庫</a>
-          <a href="#" className="hover:text-rose-400 transition">生存痛苦指數算法</a>
+          <a href="#" className="hover:text-rose-400 transition">{t('footer.protocol')}</a>
+          <a href="#" className="hover:text-rose-400 transition">{t('footer.repo')}</a>
+          <a href="#" className="hover:text-rose-400 transition">{t('footer.algorithm')}</a>
         </div>
       </footer>
     </div>

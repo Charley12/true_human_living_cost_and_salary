@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { geoMercator, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
+import { useTranslation } from '../i18n/I18nContext';
 
 // Region definitions with real lat/lng coordinates
 const REGION_DEFS: Record<string, { name: string; lng: number; lat: number }> = {
@@ -30,6 +31,7 @@ function buildProjection(width: number, height: number, panOffset: { x: number; 
 }
 
 export function WorldMap({ heatmapStats }: Props) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [countryPaths, setCountryPaths] = useState<{ id: string | number; d: string }[]>([]);
   const [size, setSize] = useState({ width: 1200, height: 700 });
@@ -301,7 +303,7 @@ export function WorldMap({ heatmapStats }: Props) {
                 fontWeight="600"
                 letterSpacing="0.5"
               >
-                {region.name}
+                {t('regions.' + key)}
               </text>
               <text
                 y={radius + 22}
