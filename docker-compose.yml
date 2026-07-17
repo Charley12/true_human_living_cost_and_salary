@@ -1,15 +1,8 @@
 version: '3.8'
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: truehuman
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+  # NOTE: The local 'db' service has been removed.
+  # The backend now connects to Cloud SQL (charley-home-0510) via its Private IP.
+  # Ensure VPC Peering / Private Service Connect is enabled on the Cloud SQL instance.
 
   backend:
     build:
@@ -18,13 +11,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=truehuman
-    depends_on:
-      - db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME:-truehuman}
 
   frontend:
     build:
@@ -37,6 +28,3 @@ services:
       - ./certs:/etc/nginx/certs:ro
     depends_on:
       - backend
-
-volumes:
-  pgdata:
