@@ -106,7 +106,7 @@ function App() {
       </header>
 
       {/* Main Body */}
-      <main className="w-full flex-1 flex flex-col lg:flex-row items-stretch justify-start px-4 md:px-8 lg:px-12 py-4 gap-8 z-20 relative overflow-hidden">
+      <main className="w-full flex-1 flex flex-col lg:flex-row items-stretch justify-start px-4 md:px-8 lg:px-12 py-4 gap-8 z-20 relative overflow-hidden pointer-events-none">
         <LeftPanel onNewSubmission={handleNewSubmission} />
         <RightPanel unlocked={unlocked} lastSubmission={lastSubmission} />
       </main>

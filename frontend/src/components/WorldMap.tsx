@@ -22,10 +22,10 @@ interface Props {
   heatmapStats: HeatmapStats;
 }
 
-function buildProjection(width: number, height: number) {
+function buildProjection(width: number, height: number, panOffset: { x: number; y: number }) {
   return geoMercator()
     .scale((width / (2 * Math.PI)) * 1.22)
-    .translate([width / 2, (height / 2) + height * 0.06])
+    .translate([width / 2 + panOffset.x, (height / 2) + height * 0.06 + panOffset.y])
     .center([10, 15]);
 }
 
@@ -35,16 +35,31 @@ export function WorldMap({ heatmapStats }: Props) {
   const [size, setSize] = useState({ width: 1200, height: 700 });
   const [projected, setProjected] = useState<Record<string, { x: number; y: number }>>({});
   const [latLines, setLatLines] = useState<{ lat: number; y: number }[]>([]);
+  
+  // Dragging / Panning State
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const panStart = useRef({ x: 0, y: 0 });
+  const geojsonRef = useRef<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const recompute = useCallback(async (width: number, height: number) => {
-    const proj = buildProjection(width, height);
+  // Load world atlas topology once on mount to cache it
+  useEffect(() => {
+    import('world-atlas/countries-110m.json').then((topo: any) => {
+      const data = topo.default || topo;
+      geojsonRef.current = feature(data, data.objects.countries);
+      setLoading(false);
+    });
+  }, []);
+
+  const recompute = useCallback((width: number, height: number, offset: { x: number; y: number }) => {
+    if (!geojsonRef.current) return;
+
+    const proj = buildProjection(width, height, offset);
     const pathGen = geoPath().projection(proj);
 
-    // Load world atlas topology bundled from node_modules/world-atlas/countries-110m.json
-    const topo = (await import('world-atlas/countries-110m.json')) as any;
-    const geojson = feature(topo, topo.objects.countries) as any;
-
-    const newPaths = geojson.features.map((f: any) => ({
+    const newPaths = geojsonRef.current.features.map((f: any) => ({
       id: f.id ?? Math.random(),
       d: pathGen(f) ?? '',
     }));
@@ -68,6 +83,7 @@ export function WorldMap({ heatmapStats }: Props) {
     setLatLines(lines);
   }, []);
 
+  // Update sizes when wrapper changes size
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -76,7 +92,6 @@ export function WorldMap({ heatmapStats }: Props) {
       const { width, height } = el.getBoundingClientRect();
       if (width > 0 && height > 0) {
         setSize({ width, height });
-        recompute(width, height);
       }
     };
 
@@ -84,10 +99,81 @@ export function WorldMap({ heatmapStats }: Props) {
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [recompute]);
+  }, []);
+
+  // Recompute SVG paths and projection points whenever size or panOffset updates
+  useEffect(() => {
+    recompute(size.width, size.height, panOffset);
+  }, [size, panOffset, recompute, loading]);
+
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return; // Left click only
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    panStart.current = { ...panOffset };
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    setIsDragging(true);
+    dragStart.current = { x: touch.clientX, y: touch.clientY };
+    panStart.current = { ...panOffset };
+  };
+
+  // Manage window mouse & touch listeners globally to support dragging outside the container
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const dx = e.clientX - dragStart.current.x;
+      const dy = e.clientY - dragStart.current.y;
+      setPanOffset({
+        x: panStart.current.x + dx,
+        y: panStart.current.y + dy,
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - dragStart.current.x;
+      const dy = touch.clientY - dragStart.current.y;
+      setPanOffset({
+        x: panStart.current.x + dx,
+        y: panStart.current.y + dy,
+      });
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 z-0 select-none overflow-hidden cursor-grab active:cursor-grabbing pointer-events-auto"
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+    >
       <svg
         viewBox={`0 0 ${size.width} ${size.height}`}
         className="w-full h-full"
