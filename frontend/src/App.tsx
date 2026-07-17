@@ -1,24 +1,81 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { LeftPanel } from './components/LeftPanel';
 import { RightPanel } from './components/RightPanel';
 import { WorldMap } from './components/WorldMap';
+
+// Map 2-letter ISO country codes to map region keys
+const REGION_MAPPING: Record<string, string> = {
+  TW: 'east_asia',
+  CN: 'east_asia',
+  JP: 'east_asia',
+  KR: 'east_asia',
+  US: 'na_east',
+  CA: 'na_west', // Map Canada to na_west for visual balance
+  BR: 'sa',
+  AR: 'sa',
+  CL: 'sa',
+  GB: 'europe',
+  FR: 'europe',
+  DE: 'europe',
+  IT: 'europe',
+  ES: 'europe',
+  NL: 'europe',
+  IN: 'south_asia',
+  VN: 'south_asia',
+  TH: 'south_asia',
+  AU: 'oceania',
+  NZ: 'oceania',
+  ZA: 'africa',
+  EG: 'africa'
+};
 
 function App() {
   const [unlocked, setUnlocked] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<any>(null);
   const [onlineCounter, setOnlineCounter] = useState(31482);
 
-  // Heatmap Region Base Counts (lat/lng-positioned; D3 projection handles rendering)
+  // Heatmap Region Counts (lat/lng-positioned; loaded from DB)
   const [heatmapStats, setHeatmapStats] = useState<any>({
-    na_west:    { name: '北美西部',  count: 8520 },
-    na_east:    { name: '北美東部',  count: 18420 },
-    sa:         { name: '南美洲',    count: 5210 },
-    europe:     { name: '歐洲地區',  count: 24850 },
-    africa:     { name: '非洲地區',  count: 1840 },
-    east_asia:  { name: '東亞地區',  count: 32510 },
-    south_asia: { name: '南亞地區',  count: 14120 },
-    oceania:    { name: '大洋洲',    count: 1240 },
+    na_west:    { name: '北美西部',  count: 0 },
+    na_east:    { name: '北美東部',  count: 0 },
+    sa:         { name: '南美洲',    count: 0 },
+    europe:     { name: '歐洲地區',  count: 0 },
+    africa:     { name: '非洲地區',  count: 0 },
+    east_asia:  { name: '東亞地區',  count: 0 },
+    south_asia: { name: '南亞地區',  count: 0 },
+    oceania:    { name: '大洋洲',    count: 0 },
   });
+
+  const fetchSummary = useCallback(async () => {
+    try {
+      const res = await axios.get('/api/v1/countrySummary');
+      const summaryList = res.data; // List of { countryCode: string, submissionCount: number }
+      
+      setHeatmapStats((prevStats: any) => {
+        const newStats = { ...prevStats };
+        // Reset counts first
+        for (const k in newStats) {
+          newStats[k] = { ...newStats[k], count: 0 };
+        }
+        // Map and aggregate counts
+        summaryList.forEach((item: any) => {
+          const region = REGION_MAPPING[item.countryCode];
+          if (region && newStats[region]) {
+            newStats[region].count += item.submissionCount;
+          }
+        });
+        return newStats;
+      });
+    } catch (err) {
+      console.error('Failed to fetch country summary', err);
+    }
+  }, []);
+
+  // Fetch summary on load
+  useEffect(() => {
+    fetchSummary();
+  }, [fetchSummary]);
 
   // Simulate real-time active users fluctuation
   useEffect(() => {
@@ -28,7 +85,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate random global activity surges
+  // Simulate random global activity surges on map (temporarily adding values to state)
   useEffect(() => {
     const interval = setInterval(() => {
       setHeatmapStats((prevStats: any) => {
@@ -45,36 +102,14 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const detectRegionKey = (locationStr: string): string => {
-    const loc = (locationStr || '').toLowerCase();
-    if (loc.includes('台') || loc.includes('台北') || loc.includes('高雄') || loc.includes('中') || loc.includes('東亞') || loc.includes('japan') || loc.includes('東京') || loc.includes('seoul') || loc.includes('asia') || loc.includes('亞')) return 'east_asia';
-    if (loc.includes('溫哥華') || loc.includes('vancouver') || loc.includes('西雅圖') || loc.includes('加州') || loc.includes('west')) return 'na_west';
-    if (loc.includes('us') || loc.includes('usa') || loc.includes('美') || loc.includes('紐約') || loc.includes('加拿大')) return 'na_east';
-    if (loc.includes('歐') || loc.includes('巴') || loc.includes('倫') || loc.includes('英') || loc.includes('德') || loc.includes('意') || loc.includes('西') || loc.includes('europe')) return 'europe';
-    if (loc.includes('南美') || loc.includes('巴西') || loc.includes('智利') || loc.includes('阿根廷') || loc.includes('brazil')) return 'sa';
-    if (loc.includes('印度') || loc.includes('南亞') || loc.includes('india') || loc.includes('泰') || loc.includes('越')) return 'south_asia';
-    if (loc.includes('澳') || loc.includes('紐西蘭') || loc.includes('澳洲') || loc.includes('oceania') || loc.includes('大洋')) return 'oceania';
-    if (loc.includes('非') || loc.includes('南非') || loc.includes('埃及') || loc.includes('africa')) return 'africa';
-    const defaultPool = ['east_asia', 'na_east', 'europe'];
-    return defaultPool[Math.floor(Math.random() * defaultPool.length)];
-  };
 
   const handleNewSubmission = (human: any) => {
     setLastSubmission(human);
     setUnlocked(true);
     setOnlineCounter((prev) => prev + 1);
-
-    const region = detectRegionKey(human.country);
-    setHeatmapStats((prev: any) => {
-      const update = { ...prev };
-      if (update[region]) {
-        update[region] = {
-          ...update[region],
-          count: update[region].count + Math.floor(Math.random() * 150) + 200,
-        };
-      }
-      return update;
-    });
+    
+    // Re-fetch counts from database to reflect the new submission
+    fetchSummary();
   };
 
   return (
