@@ -41,21 +41,43 @@ docker compose up -d --build
 This will start the local database, the Spring Boot application (which auto-applies Flyway migrations), and the React application.
 
 ## 3. Cloud SQL Connection via VPC Peering (Production)
-For a production deployment, rather than running a local PostgreSQL container, you should connect to a Google Cloud SQL instance over Private IP using VPC peering to avoid external bandwidth latency fees.
 
-1. **Create a Cloud SQL Instance:** Create a PostgreSQL instance in the same region as your Compute Engine.
-2. **Enable Private IP:** Under the "Connections" tab of the Cloud SQL instance, disable Public IP and enable Private IP. Select the default network (or your custom VPC network). Google Cloud will prompt you to set up Private Service Connect (VPC Peering).
-3. **Configure the Instance:** Apply the database name (`truehuman`), username, and password.
-4. **Update the Application Environment:** Update the `docker-compose.yml` backend service environment variables:
-   ```yaml
-   environment:
-     - DB_HOST=<CLOUD_SQL_PRIVATE_IP>
-     - DB_PORT=5432
-     - DB_USER=<USERNAME>
-     - DB_PASSWORD=<PASSWORD>
-     - DB_NAME=truehuman
+This project connects **Compute Engine instance `truehuman-1`** to **Cloud SQL instance `charley-home-0510`** over a Private IP using VPC Peering. No public IP or Cloud SQL Auth Proxy is required.
+
+### Steps to enable the connection:
+
+1. **Enable Private IP on Cloud SQL `charley-home-0510`:**
+   - In GCP Console → **SQL** → `charley-home-0510` → **Connections** tab.
+   - Under **Private IP**, enable it and select the **default** VPC network.
+   - GCP will set up Private Service Connect / VPC Peering automatically.
+   - Note the **Private IP address** shown after saving (e.g., `10.x.x.x`).
+
+2. **Ensure the Compute Engine `truehuman-1` is on the same VPC:**
+   - GCP Console → **Compute Engine** → `truehuman-1` → **Network interfaces** should show `default` network.
+
+3. **Create the `.env` file on `truehuman-1`:**
+   SSH into the instance and create a `.env` file in the project root using the template:
+   ```bash
+   cp .env.example .env
+   nano .env
    ```
-   *Make sure you remove the `depends_on: db` directive and the local `db` service definition when using Cloud SQL.*
+   Fill in the actual values:
+   ```env
+   DB_HOST=<CLOUD_SQL_PRIVATE_IP>   # e.g. 10.42.0.3
+   DB_PORT=5432
+   DB_USER=<YOUR_DB_USERNAME>
+   DB_PASSWORD=<YOUR_DB_PASSWORD>
+   DB_NAME=truehuman
+   ```
+
+4. **Start the stack:**
+   ```bash
+   docker compose up -d --build
+   ```
+   Docker Compose will read the `.env` file automatically and inject the values into the backend container.
+
+> [!NOTE]
+> The local `db` (PostgreSQL container) service has been removed from `docker-compose.yml`. The backend now connects exclusively to Cloud SQL `charley-home-0510` via its Private IP.
 
 ## 4. Firewall Rules
 To expose the web application while maintaining internal security, configure the GCP Firewall to allow traffic only on ports 80 and 443. Run the following command from the Google Cloud Shell (or your local environment authenticated via `gcloud`):
