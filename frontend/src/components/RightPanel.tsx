@@ -284,20 +284,20 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-black text-slate-100 truncate">{card.name}</h4>
                   <p className="text-[10px] text-slate-400 flex items-center gap-1">
-                    <MapPin size={10} className="text-slate-400 shrink-0" />
+                    <MapPin size={10} className="text-rose-500 shrink-0" />
                     <span className="truncate">{card.country}</span>
                   </p>
                 </div>
                  <span
                   className={clsx(
                     "text-[9px] font-bold border px-2 py-0.5 rounded-full shrink-0",
-                    isHighStress ? "text-white border-slate-500 bg-slate-700/60 animate-pulse" : isMediumStress ? "text-slate-200 border-slate-700 bg-slate-800/40" : "text-slate-400 border-slate-800 bg-slate-900/20"
+                    isHighStress ? "text-rose-500 border-rose-950 bg-rose-950/20 animate-pulse" : isMediumStress ? "text-amber-400 border-amber-950 bg-amber-950/20" : "text-emerald-400 border-emerald-950 bg-emerald-950/20"
                   )}
                 >
                   {t("right.stress_index")}: {stress}%
                 </span>
               </div>
-              <div className="text-[11px] text-slate-300 leading-relaxed italic border-l-2 border-slate-500 pl-2 bg-slate-950/30 py-1.5 pr-1 rounded-r">
+              <div className="text-[11px] text-slate-300 leading-relaxed italic border-l-2 border-rose-500/50 pl-2 bg-slate-950/30 py-1.5 pr-1 rounded-r">
                 "{card.cry}"
               </div>
               <div className="flex justify-between items-center text-[9px] text-slate-500 border-t border-slate-800/60 pt-2">
@@ -313,32 +313,32 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
       </div>
 
       {/* 4. Map Legend (Bottom-Left of map container) */}
-      <div className="absolute bottom-6 left-6 z-20 bg-slate-950/85 border border-slate-800/80 p-3 rounded-xl backdrop-blur-md flex flex-col gap-2 text-[10px] shadow-xl pointer-events-auto transition hover:border-slate-700 max-w-[200px]">
+      <div className="absolute bottom-6 left-6 z-20 bg-slate-950/85 border border-slate-800/80 p-3 rounded-xl backdrop-blur-md flex flex-col gap-2 text-[10px] shadow-xl pointer-events-auto transition hover:border-rose-900/45 max-w-[200px]">
         <div className="flex items-center gap-1.5 border-b border-slate-900 pb-1.5">
-          <i className="fa-solid fa-fire-flame-curved text-slate-300 animate-pulse"></i>
+          <i className="fa-solid fa-fire-flame-curved text-rose-500 animate-pulse"></i>
           <span className="text-slate-400 font-bold uppercase tracking-wider">{t("right.legend_title")}</span>
         </div>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-slate-500">
-              <span className="w-2 h-2 rounded-full bg-slate-700/60 border border-slate-600"></span>
+              <span className="w-2 h-2 rounded-full bg-rose-950/40 border border-rose-900/60"></span>
               {t("right.legend_low")}
             </span>
             <span className="font-mono text-slate-600">Low</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-slate-400 border border-slate-300 shadow-sm"></span>
+              <span className="w-2 h-2 rounded-full bg-rose-800/60 shadow-sm shadow-rose-800/30"></span>
               {t("right.legend_med")}
             </span>
-            <span className="font-mono text-slate-400">Med</span>
+            <span className="font-mono text-rose-800/80">Med</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-slate-200 font-bold">
-              <span className="w-2 h-2 rounded-full bg-white shadow-md shadow-white animate-pulse"></span>
+            <span className="flex items-center gap-2 text-rose-400 font-medium">
+              <span className="w-2 h-2 rounded-full bg-rose-500 shadow-md shadow-rose-500"></span>
               {t("right.legend_critical")}
             </span>
-            <span className="font-mono text-slate-100 animate-pulse">Critical</span>
+            <span className="font-mono text-rose-500 animate-pulse">Critical</span>
           </div>
         </div>
       </div>
@@ -348,7 +348,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
         {!widgetOpen && (
           <button
             onClick={() => setWidgetOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg shadow-lg text-xs font-bold transition cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg shadow-lg text-xs font-bold transition cursor-pointer"
           >
             <Eye size={14} /> {t("right.show_terminal")}
           </button>
@@ -358,8 +358,8 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
           <div className="bg-slate-950/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-xl shadow-2xl w-96 flex flex-col max-h-[460px] text-slate-100">
             {/* Widget Header */}
             <div className="flex justify-between items-center border-b border-slate-900 pb-2 mb-3">
-              <span className="text-slate-200 text-xs font-black tracking-widest uppercase flex items-center gap-1.5">
-                <Trophy size={14} className="text-slate-400 animate-pulse" />{t("right.terminal")}
+              <span className="text-rose-500 text-xs font-black tracking-widest uppercase flex items-center gap-1.5">
+                <Trophy size={14} className="text-rose-500 animate-pulse" />{t("right.terminal")}
               </span>
               <button
                 onClick={() => setWidgetOpen(false)}
@@ -375,7 +375,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                 onClick={() => setActiveTab("leaderboard")}
                 className={clsx(
                   "flex-1 py-1.5 text-xs font-bold rounded-md transition flex items-center justify-center gap-1.5 cursor-pointer",
-                  activeTab === "leaderboard" ? "bg-slate-800 text-white border border-slate-700" : "text-slate-400 hover:text-slate-200"
+                  activeTab === "leaderboard" ? "bg-rose-950/40 text-rose-400 border border-rose-900/50" : "text-slate-400 hover:text-slate-200"
                 )}
               >
                 <Trophy size={12} /> {t("right.leaderboard")}
@@ -384,10 +384,10 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                 onClick={() => setActiveTab("messageBoard")}
                 className={clsx(
                   "flex-1 py-1.5 text-xs font-bold rounded-md transition flex items-center justify-center gap-1.5 cursor-pointer",
-                  activeTab === "messageBoard" ? "bg-slate-800 text-white border border-slate-700" : "text-slate-400 hover:text-slate-200"
+                  activeTab === "messageBoard" ? "bg-rose-950/40 text-rose-400 border border-rose-900/50" : "text-slate-400 hover:text-slate-200"
                 )}
               >
-                <MessageSquare size={12} /> {t("right.message_board")} {!unlocked && <Lock size={12} className="text-slate-400" />}
+                <MessageSquare size={12} /> {t("right.message_board")} {!unlocked && <Lock size={12} className="text-rose-500" />}
               </button>
             </div>
 
@@ -403,7 +403,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         <span className="font-bold text-xs text-slate-300">
                           #{idx + 1} <span className="font-mono text-white text-sm ml-1.5">{entry.countryCode}</span>
                         </span>
-                        <span className="text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold bg-rose-950/50 border border-rose-900/70 text-rose-400 px-2 py-0.5 rounded-full">
                           {entry.submissionCount} {t("leaderboard.shouts")}
                         </span>
                       </div>
@@ -417,7 +417,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                   {/* Locked Overlay */}
                   {!unlocked && (
                     <div className="absolute inset-0 bg-slate-950/95 z-20 flex flex-col items-center justify-center text-slate-400 p-4 text-center rounded-xl">
-                      <Lock size={32} className="mb-2 text-slate-400 animate-pulse" />
+                      <Lock size={32} className="mb-2 text-rose-500 animate-pulse" />
                       <h4 className="text-xs font-bold text-slate-100">{t("right.locked_title")}</h4>
                       <p className="text-[10px] text-slate-500 mt-1 max-w-[220px] leading-relaxed">
                         {t("right.locked_desc")}
@@ -436,7 +436,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                           required
                           value={declForm.name}
                           onChange={(e) => setDeclForm({ ...declForm, name: e.target.value })}
-                          className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-100 focus:outline-none focus:border-slate-500"
+                          className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-100 focus:outline-none focus:border-rose-500"
                         />
                         <input
                           type="text"
@@ -444,7 +444,7 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                           required
                           value={declForm.country}
                           onChange={(e) => setDeclForm({ ...declForm, country: e.target.value })}
-                          className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-100 focus:outline-none focus:border-slate-500"
+                          className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-100 focus:outline-none focus:border-rose-500"
                         />
                       </div>
                       <textarea
@@ -452,11 +452,11 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         required
                         value={declForm.message}
                         onChange={(e) => setDeclForm({ ...declForm, message: e.target.value })}
-                        className="bg-slate-950 border border-slate-800 rounded px-2 py-1 h-12 text-[11px] focus:outline-none focus:border-slate-500 resize-none"
+                        className="bg-slate-950 border border-slate-800 rounded px-2 py-1 h-12 text-[11px] focus:outline-none focus:border-rose-500 resize-none"
                       />
                       <button
                         type="submit"
-                        className="bg-slate-100 hover:bg-white text-slate-950 font-bold py-1.5 rounded cursor-pointer transition text-[11px]"
+                        className="bg-rose-700 hover:bg-rose-600 text-white font-bold py-1 rounded cursor-pointer transition text-[11px]"
                       >
                         {t("right.decl_submit")}
                       </button>
@@ -468,9 +468,9 @@ export function RightPanel({ unlocked, lastSubmission }: RightPanelProps) {
                         <p className="text-slate-500 text-xs italic text-center py-4">{t("right.no_messages")}</p>
                       ) : (
                         messages.map((msg) => (
-                          <div key={msg.id} className="bg-slate-900/60 border-l-2 border-slate-500 border border-slate-800/40 p-2.5 rounded-r-lg text-xs">
+                          <div key={msg.id} className="bg-slate-900/60 border-l-2 border-rose-500 border border-slate-800/40 p-2.5 rounded-r-lg text-xs">
                             <div className="flex justify-between items-baseline mb-1 text-[10px]">
-                              <span className="font-extrabold text-slate-300">{msg.name}</span>
+                              <span className="font-extrabold text-rose-400">{msg.name}</span>
                               <span className="text-slate-500">{msg.country}</span>
                             </div>
                             <p className="text-slate-300 leading-normal text-[11px]">{msg.message}</p>

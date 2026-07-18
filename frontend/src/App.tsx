@@ -5,6 +5,7 @@ import { RightPanel } from './components/RightPanel';
 import { WorldMap } from './components/WorldMap';
 import { useTranslation } from './i18n/I18nContext';
 import type { Language } from './i18n/I18nContext';
+import { clsx } from 'clsx';
 
 // Map 2-letter ISO country codes to map region keys
 const REGION_MAPPING: Record<string, string> = {
@@ -37,6 +38,7 @@ function App() {
   const [unlocked, setUnlocked] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<any>(null);
   const [onlineCounter, setOnlineCounter] = useState(31482);
+  const [introStep, setIntroStep] = useState<'centered' | 'moving' | 'done'>('centered');
 
   // Heatmap Region Counts (lat/lng-positioned; loaded from DB)
   const [heatmapStats, setHeatmapStats] = useState<any>({
@@ -105,6 +107,20 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Logo intro animation sequence
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      setIntroStep('moving');
+    }, 1800);
+    const timer2 = setTimeout(() => {
+      setIntroStep('done');
+    }, 3000);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
 
   const handleNewSubmission = (human: any) => {
     setLastSubmission(human);
@@ -124,63 +140,103 @@ function App() {
       {/* Soft top/bottom gradient fade over the map */}
       <div className="absolute inset-0 z-[1] pointer-events-none select-none bg-gradient-to-b from-[#030712]/60 via-transparent to-[#030712]/70" />
 
-      {/* Header */}
-      <header className="w-full px-6 py-4 flex justify-between items-center z-30 relative bg-slate-950/20 backdrop-blur-sm border-b border-slate-900/30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shadow-lg shadow-slate-900/50 overflow-hidden">
-            <img src="/logo.png" alt="TrueHuman Logo" className="w-full h-full object-cover invert" />
+      {/* Animating Logo Element */}
+      <div
+        className={clsx(
+          "transition-all duration-[1200ms] ease-in-out flex flex-col items-center justify-center select-none",
+          introStep === 'centered'
+            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-52 h-52 md:w-64 md:h-64"
+            : "fixed top-4 left-6 w-14 h-14 z-30"
+        )}
+      >
+        <div
+          className={clsx(
+            "w-full h-full rounded-2xl bg-[#030712] border-2 border-rose-600 shadow-2xl flex items-center justify-center overflow-hidden transition-all duration-[1200ms]",
+            introStep === 'centered' ? "shadow-rose-900/40 p-4" : "shadow-rose-950/50 p-1"
+          )}
+        >
+          <img
+            src="/logo.png"
+            alt="TrueHuman Logo"
+            className="w-full h-full object-contain invert"
+          />
+        </div>
+        {/* Intro subtitle */}
+        <div
+          className={clsx(
+            "mt-3 text-center transition-all duration-[800ms]",
+            introStep === 'centered' ? "opacity-100 scale-100" : "opacity-0 scale-50 pointer-events-none h-0 overflow-hidden"
+          )}
+        >
+          <h2 className="text-rose-500 font-extrabold text-lg tracking-widest uppercase">TrueHuman</h2>
+          <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Worldwide is suffered</p>
+        </div>
+      </div>
+
+      {/* Rest of the Dashboard Container (Fades in) */}
+      <div
+        className={clsx(
+          "flex-1 flex flex-col justify-between transition-opacity duration-1000 z-10",
+          introStep === 'centered' ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}
+      >
+        {/* Header */}
+        <header className="w-full px-6 py-4 flex justify-between items-center z-30 relative bg-slate-950/20 backdrop-blur-sm border-b border-slate-900/30">
+          <div className="flex items-center gap-3">
+            {/* Logo spacer slot */}
+            <div className="w-14 h-14 shrink-0" />
+            <div>
+              <h1 className="text-xl font-extrabold tracking-wider text-rose-500">{t('header.title')}</h1>
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest">{t('header.subtitle')}</p>
+            </div>
           </div>
+          
+          <div className="flex items-center gap-4 text-xs text-slate-400">
+            {/* Language Selector Dropdown */}
+            <div className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-1.5 pointer-events-auto">
+              <i className="fa-solid fa-globe text-rose-500"></i>
+              <select
+                value={locale}
+                onChange={(e) => setLocale(e.target.value as Language)}
+                className="bg-transparent text-slate-200 outline-none cursor-pointer text-xs font-semibold"
+              >
+                <option value="en-US" className="bg-slate-950 text-slate-200">🇺🇸 English (US)</option>
+                <option value="en-GB" className="bg-slate-950 text-slate-200">🇬🇧 English (UK)</option>
+                <option value="de" className="bg-slate-950 text-slate-200">🇩🇪 Deutsch</option>
+                <option value="fr" className="bg-slate-950 text-slate-200">🇫🇷 Français</option>
+                <option value="es" className="bg-slate-950 text-slate-200">🇪🇸 Español</option>
+                <option value="it" className="bg-slate-950 text-slate-200">🇮🇹 Italiano</option>
+                <option value="pl" className="bg-slate-950 text-slate-200">🇵🇱 Polski</option>
+                <option value="ru" className="bg-slate-950 text-slate-200">🇷🇺 Русский</option>
+                <option value="uk" className="bg-slate-950 text-slate-200">🇺🇦 Українська</option>
+              </select>
+            </div>
+
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span>{onlineCounter.toLocaleString()}</span> {t('header.online')}
+            </span>
+          </div>
+        </header>
+
+        {/* Main Body */}
+        <main className="w-full flex-1 flex flex-col lg:flex-row items-stretch justify-start px-4 md:px-8 lg:px-12 py-4 gap-8 z-20 relative overflow-hidden pointer-events-none">
+          <LeftPanel onNewSubmission={handleNewSubmission} />
+          <RightPanel unlocked={unlocked} lastSubmission={lastSubmission} />
+        </main>
+
+        {/* Footer */}
+        <footer className="w-full px-6 py-3 border-t border-slate-900/55 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500 z-30 relative bg-slate-950/80 backdrop-blur-md">
           <div>
-            <h1 className="text-xl font-extrabold tracking-wider text-slate-100">{t('header.title')}</h1>
-            <p className="text-[10px] text-slate-400 uppercase tracking-widest">{t('header.subtitle')}</p>
+            {t('footer.copyright')}
           </div>
-        </div>
-        
-        <div className="flex items-center gap-4 text-xs text-slate-400">
-          {/* Language Selector Dropdown */}
-          <div className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-1.5 pointer-events-auto">
-            <i className="fa-solid fa-globe text-slate-400"></i>
-            <select
-              value={locale}
-              onChange={(e) => setLocale(e.target.value as Language)}
-              className="bg-transparent text-slate-200 outline-none cursor-pointer text-xs font-semibold"
-            >
-              <option value="en-US" className="bg-slate-950 text-slate-200">🇺🇸 English (US)</option>
-              <option value="en-GB" className="bg-slate-950 text-slate-200">🇬🇧 English (UK)</option>
-              <option value="de" className="bg-slate-950 text-slate-200">🇩🇪 Deutsch</option>
-              <option value="fr" className="bg-slate-950 text-slate-200">🇫🇷 Français</option>
-              <option value="es" className="bg-slate-950 text-slate-200">🇪🇸 Español</option>
-              <option value="it" className="bg-slate-950 text-slate-200">🇮🇹 Italiano</option>
-              <option value="pl" className="bg-slate-950 text-slate-200">🇵🇱 Polski</option>
-              <option value="ru" className="bg-slate-950 text-slate-200">🇷🇺 Русский</option>
-              <option value="uk" className="bg-slate-950 text-slate-200">🇺🇦 Українська</option>
-            </select>
+          <div className="flex gap-6 mt-2 md:mt-0">
+            <a href="#" className="hover:text-rose-400 transition">{t('footer.protocol')}</a>
+            <a href="#" className="hover:text-rose-400 transition">{t('footer.repo')}</a>
+            <a href="#" className="hover:text-rose-400 transition">{t('footer.algorithm')}</a>
           </div>
-
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-slate-400 animate-ping"></span>
-            <span>{onlineCounter.toLocaleString()}</span> {t('header.online')}
-          </span>
-        </div>
-      </header>
-
-      {/* Main Body */}
-      <main className="w-full flex-1 flex flex-col lg:flex-row items-stretch justify-start px-4 md:px-8 lg:px-12 py-4 gap-8 z-20 relative overflow-hidden pointer-events-none">
-        <LeftPanel onNewSubmission={handleNewSubmission} />
-        <RightPanel unlocked={unlocked} lastSubmission={lastSubmission} />
-      </main>
-
-      {/* Footer */}
-      <footer className="w-full px-6 py-3 border-t border-slate-900/55 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500 z-30 relative bg-slate-950/80 backdrop-blur-md">
-        <div>
-          {t('footer.copyright')}
-        </div>
-        <div className="flex gap-6 mt-2 md:mt-0">
-          <a href="#" className="hover:text-slate-300 transition">{t('footer.protocol')}</a>
-          <a href="#" className="hover:text-slate-300 transition">{t('footer.repo')}</a>
-          <a href="#" className="hover:text-slate-300 transition">{t('footer.algorithm')}</a>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
